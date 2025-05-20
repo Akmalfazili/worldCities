@@ -15,7 +15,7 @@ namespace worldCities.Server.Data
         }
 
         public DbSet<City> Cities => Set<City>();
-        public DbSet<Country> Country => Set<Country>();
+        public DbSet<Country> Countries => Set<Country>();
 
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{

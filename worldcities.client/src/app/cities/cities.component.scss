@@ -4,3 +4,8 @@ table.mat-table{
 .striped-table tr:nth-child(even) {
   background-color: #f5f5f5;
 }
+
+mat-form-field{
+    font-size:14px;
+    width:100%;
+}

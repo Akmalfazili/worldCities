@@ -13,7 +13,9 @@ namespace worldCities.Server.Data
             int pageIndex,
             int pageSize,
             string? sortColumn,
-            string? sortOrder)
+            string? sortOrder,
+            string? filterColumn,
+            string? filterQuery)
         {
             Data = data;
             PageSize = pageSize;
@@ -22,12 +24,18 @@ namespace worldCities.Server.Data
             TotalPages = (int)Math.Ceiling(count/(double)pageSize);
             SortColumn = sortColumn;
             SortOrder = sortOrder;
+            FilterColumn = filterColumn;
+            FilterQuery = filterQuery;
 
         }
 
         public static async Task<ApiResult<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize
-            , string? sortColumn = null, string? sortOrder=null)
+            , string? sortColumn = null, string? sortOrder=null, string? filterColumn=null, string? filterQuery=null)
         {
+            if(!string.IsNullOrEmpty(filterColumn) && !string.IsNullOrEmpty(filterQuery) && IsValidProperty(filterColumn))
+            {
+                source = source.Where(string.Format("{0}.StartsWith(@0)",filterColumn), filterQuery);
+            }
             var count = await source.CountAsync();
             if(!string.IsNullOrEmpty(sortColumn) && IsValidProperty(sortColumn))
             {
@@ -45,7 +53,9 @@ namespace worldCities.Server.Data
                 pageIndex,
                 pageSize,
                 sortColumn,
-                sortOrder);
+                sortOrder,
+                filterColumn,
+                filterQuery);
         }
 
         public static bool IsValidProperty(string propertyName, bool throwExceptionIfNotFound = true)
@@ -80,5 +90,7 @@ namespace worldCities.Server.Data
 
         public string? SortColumn { get; set; }
         public string? SortOrder { get; set; }
+        public string?  FilterColumn { get; set; }
+        public string? FilterQuery { get; set; }
     }
 }

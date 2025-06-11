@@ -30,8 +30,8 @@ export class CountryEditComponent implements OnInit{
   ngOnInit() {
     this.form = this.fb.group({
       name: ['', Validators.required, this.isDupeField('name')],
-      iso2: ['', Validators.required, Validators.pattern(/^[a-zA-Z]{2}$/), this.isDupeField('iso2')],
-      iso3: ['', Validators.required, Validators.pattern(/^[a-zA-Z]{3}$/), this.isDupeField('iso3')]
+      iso2: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]{2}$/)], this.isDupeField('iso2')],
+      iso3: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]{3}$/)], this.isDupeField('iso3')]
     });
     this.loadData();
   }

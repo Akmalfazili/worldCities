@@ -66,7 +66,7 @@ export class CitiesComponent implements OnInit{
     var filterColumn = (this.filterQuery) ? this.defaultFilterColumn : null;
     var filterQuery = (this.filterQuery) ? this.filterQuery : null;
 
-    this.cityService.getData(event.pageIndex, event.pageSize, sortColumn, sortOrder, filterQuery, filterQuery).subscribe({
+    this.cityService.getData(event.pageIndex, event.pageSize, sortColumn, sortOrder, filterColumn, filterQuery).subscribe({
       next: (result) => {
         this.paginator.length = result.totalCount;
         this.paginator.pageIndex = result.pageIndex;

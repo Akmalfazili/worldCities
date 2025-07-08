@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy} from '@angular/core';
 //import { HttpClient,HttpParams } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, AsyncValidatorFn } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 //import { environment } from './../../environments/environment';
@@ -16,13 +16,20 @@ import { CityService } from './city.service';
   templateUrl: './city-edit.component.html',
   styleUrl: './city-edit.component.scss'
 })
-export class CityEditComponent extends BaseFormComponent implements OnInit {
+
+
+export class CityEditComponent extends BaseFormComponent implements OnInit, OnDestroy {
   title?: string;
   //form!: FormGroup;
   city?: City;
   id?: number;
   //countries array for the select
   countries?: Country[];
+
+  //Activity log for debugging purposes
+  activityLog: string = '';
+
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -37,8 +44,34 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
         lat: new FormControl('', [Validators.required, Validators.pattern(/^[-]?[0-9]{1,3}(\.[0-9]{1,4})?$/)]),
         lon: new FormControl('', [Validators.required, Validators.pattern(/^[-]?[0-9]{1,3}(\.[0-9]{1,4})?$/)]),
         countryId: new FormControl('', Validators.required)
-      },null, this.isDupeCity());
+      }, null, this.isDupeCity());
+      //react to from changes
+      this.subscriptions.add(this.form.valueChanges.subscribe(() => {
+        if (!this.form.dirty) {
+          this.log("Form Model has been loaded.");
+        }
+        else {
+          this.log("Form was updated by the user.");
+        }
+      }));
+      // react to changes in the form.name control
+      this.subscriptions.add(this.form.get("name")!.valueChanges.subscribe(() => {
+        if (!this.form.dirty) {
+          this.log("Name has been loaded with initial values");
+        }
+        else {
+          this.log("Name was updated by the user")
+        }
+      }));
       this.loadData();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+  }
+
+  log(str: string) {
+    this.activityLog += "[" + new Date().toLocaleString() + "] " + str + "<br />";
   }
 
   isDupeCity(): AsyncValidatorFn {

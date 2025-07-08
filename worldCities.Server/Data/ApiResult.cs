@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 using System.Reflection;
+using EFCore.BulkExtensions;
 
 namespace worldCities.Server.Data
 {
@@ -45,6 +46,10 @@ namespace worldCities.Server.Data
                 source = source.OrderBy(string.Format("{0} {1}", sortColumn,sortOrder));
             }
             source = source.Skip(pageIndex * pageSize).Take(pageSize);
+#if DEBUG
+            //retreive SQL query for debug purpose
+            var sql = source.ToQueryString();
+#endif
             var data = await source.ToListAsync();
 
             return new ApiResult<T>(

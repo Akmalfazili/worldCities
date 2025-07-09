@@ -71,7 +71,7 @@ export class CityEditComponent extends BaseFormComponent implements OnInit, OnDe
   }
 
   log(str: string) {
-    this.activityLog += "[" + new Date().toLocaleString() + "] " + str + "<br />";
+    console.log( "[" + new Date().toLocaleString() + "] " + str );
   }
 
   isDupeCity(): AsyncValidatorFn {

@@ -44,5 +44,39 @@ namespace WorldCities.Server.Tests
             Assert.NotNull(city_existing);
             Assert.Null(city_notExisting);
         }
+
+        [Fact]
+        public void CheckDuplicate()
+        {
+            //Arrange
+            //todo:define the required assets
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase(databaseName: "WorldCities")
+                .Options;
+            using var context = new ApplicationDbContext(options);
+            context.Add(new City()
+            {
+                Id = 1,
+                CountryId = 1,
+                Lat = 1,
+                Lon = 1,
+                Name = "TestCity1"
+            });
+            context.SaveChanges();
+            var controller = new CitiesController(context);
+            City? city_dupe = new City(){
+                Id = 2,CountryId = 1,Lat = 1, Lon = 1,Name="TestCity1"
+            };
+            City? city_not_dupe = new City() { Id=3,CountryId=1,Lat=2,Lon=2,Name="TestCity1"};
+
+            //Act
+            //todo:invoke the test
+            bool test1 = controller.IsDupeCity(city_dupe);
+            bool test2 = controller.IsDupeCity(city_not_dupe);
+
+            //Assert
+            //todo:verify the conditions are met
+            Assert.True(test1);
+            Assert.False(test2);
+        }
     }
 }

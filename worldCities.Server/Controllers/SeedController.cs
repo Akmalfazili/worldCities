@@ -5,6 +5,7 @@ using System.Security;
 using OfficeOpenXml;
 using worldCities.Server.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace worldCities.Server.Controllers
 {
@@ -14,11 +15,17 @@ namespace worldCities.Server.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _env;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IConfiguration _configuration;
 
-        public SeedController(ApplicationDbContext context, IWebHostEnvironment env)
+        public SeedController(ApplicationDbContext context, IWebHostEnvironment env, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
             _context = context;
             _env = env;
+            _roleManager = roleManager;
+            _userManager = userManager;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -138,6 +145,43 @@ namespace worldCities.Server.Controllers
                 Cities = numberOfCitiesAdded,
                 Countries = numberOfCountriesAdded
             });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateDefaultUsers()
+        {
+            //setup default role names
+            string role_RegisteredUser = "RegisteredUser";
+            string role_Administrator = "Administrator";
+
+            //create the default roles (if they dont exist yet)
+            if(await _roleManager.FindByNameAsync(role_RegisteredUser) == null)
+            {
+                await _roleManager.CreateAsync(new IdentityRole(role_RegisteredUser));
+            }
+            if(await _roleManager.FindByNameAsync(role_Administrator) == null)
+            {
+                await _roleManager.CreateAsync(new IdentityRole(role_Administrator));
+            }
+
+            //create a list to track the newly added users
+            var addedUserList = new List<ApplicationUser>();
+
+            //check if admin user already exists
+            var email_Admin = "admin@email.com";
+            if(await _userManager.FindByNameAsync(email_Admin) == null)
+            {
+                var user_Admin = new ApplicationUser()
+                {
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    UserName = email_Admin,
+                    Email = email_Admin
+                };
+
+                //insert the admin user into the db
+
+            }
+
         }
     }
 }

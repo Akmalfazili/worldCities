@@ -17,7 +17,7 @@ namespace WorldCities.Server.Tests
         public async Task GetCity()
         {
             //Arrange
-            //todo: define the required assets
+            //define the required assets
             var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase(databaseName: "WorldCities")
                 .Options;
             using var context = new ApplicationDbContext(options);
@@ -35,12 +35,12 @@ namespace WorldCities.Server.Tests
             City? city_existing = null;
             City? city_notExisting = null;
             //Act
-            //todo: invoke the test
+            //invoke the test
             city_existing = (await controller.GetCity(1)).Value;
             city_notExisting = (await controller.GetCity(2)).Value;
 
             //Assert
-            //todo: verify that conditions are met
+            //verify that conditions are met
             Assert.NotNull(city_existing);
             Assert.Null(city_notExisting);
         }

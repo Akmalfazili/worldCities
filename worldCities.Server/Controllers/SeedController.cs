@@ -6,11 +6,13 @@ using OfficeOpenXml;
 using worldCities.Server.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace worldCities.Server.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    //[Authorize(Roles ="Administrator")]
     public class SeedController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -169,6 +171,7 @@ namespace worldCities.Server.Controllers
 
             //check if admin user already exists
             var email_Admin = "admin@email.com";
+
             if(await _userManager.FindByNameAsync(email_Admin) == null)
             {
                 var user_Admin = new ApplicationUser()
@@ -179,9 +182,51 @@ namespace worldCities.Server.Controllers
                 };
 
                 //insert the admin user into the db
+                await _userManager.CreateAsync(user_Admin, _configuration["DefaultPasswords:Administrator"]);
 
+                //assign the "RegisteredUser" and "Administrator" roles
+                await _userManager.AddToRoleAsync(user_Admin,role_RegisteredUser);
+                await _userManager.AddToRoleAsync(user_Admin, role_Administrator);
+
+                //add the admin user to the added users list
+                addedUserList.Add(user_Admin);
             }
 
+            //check if standard user already exist
+            var email_User = "user@email.com";
+            if(await _userManager.FindByNameAsync(email_User) == null)
+            {
+                //create a new standard ApplicationUser account
+                var user_User = new ApplicationUser()
+                {
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    UserName = email_User,
+                    Email = email_User
+                };
+
+                //insert the standard user into the db
+                await _userManager.CreateAsync(user_User, _configuration["DefaultPasswords:RegisteredUser"]);
+
+                //assign the "RegisteredUser" role
+                await _userManager.AddToRoleAsync(user_User,role_RegisteredUser);
+
+                //confirm the email and remove Lockout
+                user_User.EmailConfirmed = true;
+                user_User.LockoutEnabled = false;
+
+                //add the standard user to the added users list
+                addedUserList.Add(user_User);   
+            }
+            //if we added at least one user, persist the changes into the db
+            if(addedUserList.Count > 0)
+            {
+                await _context.SaveChangesAsync();
+            }
+            return new JsonResult(new
+            {
+                Count = addedUserList.Count,
+                Users = addedUserList
+            });
         }
     }
 }

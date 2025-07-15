@@ -14,6 +14,7 @@ import { CountriesComponent } from './countries/countries.component';
 import { CityEditComponent } from './cities/city-edit.component';
 import { CountryEditComponent } from './countries/country-edit.component';
 import { CityService } from './cities/city.service';
+import { LoginComponent } from './auth/login.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { CityService } from './cities/city.service';
     CitiesComponent,
     CountriesComponent,
     CityEditComponent,
-    CountryEditComponent
+    CountryEditComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule, HttpClientModule,

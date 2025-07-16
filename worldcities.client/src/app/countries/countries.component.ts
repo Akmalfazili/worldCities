@@ -4,6 +4,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { AuthService } from '../auth/auth.service';
 
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -33,10 +34,12 @@ export class CountriesComponent implements OnInit{
 
   filterTextChanged: Subject<string> = new Subject<string>();
 
-  constructor(private countryService: CountryService) {
+  isLoggedIn: boolean = false;
+  constructor(private countryService: CountryService, private authService: AuthService) {
   }
 
   ngOnInit() {
+    this.isLoggedIn = this.authService.isAuthenticated();
     this.loadData();
   }
 

@@ -4,6 +4,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { AuthService } from '../auth/auth.service';
 
 import { City } from './city';
 import { CityService } from './city.service';
@@ -26,12 +27,15 @@ export class CitiesComponent implements OnInit{
   defaultFilterColumn: string = "name";
   filterQuery?: string;
 
+  isLoggedIn: boolean = false;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private cityService: CityService) {
+  constructor(private cityService: CityService, private authService: AuthService) {
   }
   ngOnInit() {
+    this.isLoggedIn = this.authService.isAuthenticated();
     this.loadData();
   }
   loadData(query?:string) {

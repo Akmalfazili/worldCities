@@ -41,7 +41,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.Password.RequireUppercase = true;
     options.Password.RequireNonAlphanumeric = true;
     options.Password.RequiredLength = 8;
-}).AddEntityFrameworkStores<ApplicationDbContext>();
+}).AddApiEndpoints()
+.AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddScoped<JwtHandler>();
 
@@ -63,7 +64,7 @@ builder.Services.AddAuthentication(opt =>
         ValidAudience = builder.Configuration["JwtSettings:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecurityKey"]!))
     };
-});
+}).AddBearerToken(IdentityConstants.BearerScheme);
 
 var app = builder.Build();
 app.UseSerilogRequestLogging();
@@ -80,7 +81,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.MapIdentityApi<ApplicationUser>();
 app.MapControllers();
 
 app.MapFallbackToFile("/index.html");

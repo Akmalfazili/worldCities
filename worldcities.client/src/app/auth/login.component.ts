@@ -15,8 +15,11 @@ import { LoginResult } from './login-result';
 export class LoginComponent extends BaseFormComponent implements OnInit {
   title?: string;
   loginResult?: LoginResult;
+  returnUrl: string = '/';
+
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private authService: AuthService) {
     super();
+    this.returnUrl = this.activatedRoute.snapshot.queryParamMap.get('returnUrl') || '/';
   }
   ngOnInit() {
     this.form = new FormGroup({
@@ -33,6 +36,8 @@ export class LoginComponent extends BaseFormComponent implements OnInit {
       next: (result) => {
         console.log(result);
         this.loginResult = result;
+        this.router.navigateByUrl(this.returnUrl); //re-navigate to previously unauthorised page
+        //this.router.navigate(['/']);
       },
       error: (error) => {
         console.log(error);

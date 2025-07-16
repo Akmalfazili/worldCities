@@ -5,7 +5,7 @@
 <p *ngIf="!countries"><em>Loading....</em></p>
 
 <button mat-flat-button color="primary"
-        class="btn-add" [routerLink]="['/country']">
+        class="btn-add" [routerLink]="['/country']" *ngIf="isLoggedIn && countries">
   Add a new Country
 </button>
 

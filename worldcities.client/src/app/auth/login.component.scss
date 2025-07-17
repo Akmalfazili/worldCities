@@ -2,3 +2,14 @@ mat-form-field{
     display:block;
     margin:10px 0;
 }
+.create-account{
+    text-align:center;
+    margin-top:1.5rem;
+}
+.create-account a{
+    color:#007bff;
+    text-decoration:none;
+}
+.create-account a:hover{
+    text-decoration:underline;
+}

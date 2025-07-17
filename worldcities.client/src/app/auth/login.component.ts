@@ -16,14 +16,16 @@ export class LoginComponent extends BaseFormComponent implements OnInit {
   title?: string;
   loginResult?: LoginResult;
   returnUrl: string = '/';
+  isLoggedIn: boolean = false;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private authService: AuthService) {
     super();
     this.returnUrl = this.activatedRoute.snapshot.queryParamMap.get('returnUrl') || '/';
   }
   ngOnInit() {
+    this.isLoggedIn = this.authService.isAuthenticated();
     this.form = new FormGroup({
-      email: new FormControl('', Validators.required),
+      email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', Validators.required)
     });
   }

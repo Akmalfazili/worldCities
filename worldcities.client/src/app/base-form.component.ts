@@ -16,6 +16,9 @@ export abstract class BaseFormComponent {
     var errors: string[] = [];
     Object.keys(control.errors || {}).forEach((key) => {
       switch (key) {
+        case 'email':
+          errors.push(`${displayName} ${customMessages?.[key] ?? "format is invalid."}`);
+          break;
         case 'required':
           errors.push(`${displayName} ${customMessages?.[key]?? "is required."}`);
           break;

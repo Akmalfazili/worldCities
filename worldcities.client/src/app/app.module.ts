@@ -16,6 +16,7 @@ import { CountryEditComponent } from './countries/country-edit.component';
 import { CityService } from './cities/city.service';
 import { LoginComponent } from './auth/login.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
+import { SignUpComponent } from './auth/sign-up.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     CountriesComponent,
     CityEditComponent,
     CountryEditComponent,
-    LoginComponent
+    LoginComponent,
+    SignUpComponent
   ],
   imports: [
     BrowserModule, HttpClientModule,

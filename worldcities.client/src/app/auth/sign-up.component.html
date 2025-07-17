@@ -1,0 +1,42 @@
+<div class="singup">
+  <h1>Account Registration</h1>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <!--Name-->
+    <mat-form-field>
+      <mat-label>Email:</mat-label>
+      <input matInput formControlName="email" required
+             placeholder="Insert email">
+      <mat-error *ngFor="let error of getErrors(form.get('email')!,'Email')">
+        {{error}}
+      </mat-error>
+    </mat-form-field>
+    <!--Password-->
+    <mat-form-field>
+      <mat-label>Password:</mat-label>
+      <input matInput type="password" formControlName="password" required
+             placeholder="Insert password" [type]="hide1 ? 'password' : 'text'">
+      <mat-icon matSuffix (click)="hide1 = !hide1">{{hide1 ? 'visibility_off' : 'visibility'}}</mat-icon>
+      <mat-error *ngFor="let error of getErrors(form.get('password')!,'Password')">
+        {{error}}
+      </mat-error>
+    </mat-form-field>
+    <!--Password2-->
+    <mat-form-field>
+      <mat-label>Password:</mat-label>
+      <input matInput type="password" formControlName="password2" required
+             placeholder="Insert password again" [type]="hide2 ? 'password' : 'text'">
+      <mat-icon matSuffix (click)="hide2 = !hide2">{{hide2 ? 'visibility_off' : 'visibility'}}</mat-icon>
+      <mat-error *ngFor="let error of getErrors(form.get('password')!,'Password')">
+        {{error}}
+      </mat-error>
+    </mat-form-field>
+    <div>
+      <button mat-flat-button color="primary" type="submit">
+        Submit
+      </button>
+      <button mat-flat-button color="secondary" [routerLink]="['/login']">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

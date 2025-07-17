@@ -33,4 +33,7 @@
       </button>
     </div>
   </form>
+  <div class="create-account" *ngIf="!isLoggedIn">
+    <a [routerLink]="['/signUp']">Create an account </a>
+  </div>
 </div>

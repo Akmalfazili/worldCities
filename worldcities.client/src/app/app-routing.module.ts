@@ -7,6 +7,7 @@ import { CountriesComponent } from './countries/countries.component';
 import { CountryEditComponent } from './countries/country-edit.component';
 import { LoginComponent } from './auth/login.component';
 import { AuthGuard } from './auth/auth.guard';
+import { SignUpComponent } from './auth/sign-up.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -16,7 +17,8 @@ const routes: Routes = [
   { path: 'city', component: CityEditComponent, canActivate: [AuthGuard] },
   { path: 'country/:id', component: CountryEditComponent, canActivate: [AuthGuard] },
   { path: 'country', component: CountryEditComponent, canActivate: [AuthGuard] },
-  { path: 'login', component: LoginComponent }];
+  { path: 'login', component: LoginComponent },
+  { path: 'signUp', component: SignUpComponent }];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

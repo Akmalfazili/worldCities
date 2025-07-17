@@ -34,6 +34,7 @@ export class AuthService {
   login(item: LoginRequest): Observable<LoginResult> {
     var url = environment.baseUrl + "api/Account/Login";
     return this.http.post<LoginResult>(url, item).pipe(tap(loginResult => {
+      //console.log(loginResult);
       if (loginResult.success && loginResult.token) {
         localStorage.setItem(this.tokenKey, loginResult.token);
         this.setAuthStatus(true);
@@ -46,5 +47,9 @@ export class AuthService {
   logout() {
     localStorage.removeItem(this.tokenKey);
     this.setAuthStatus(false);
+  }
+  signup(item: LoginRequest): Observable<LoginResult> {
+    var url = environment.baseUrl + "api/Account/SignUp";
+    return this.http.post<LoginResult>(url, item);
   }
 }

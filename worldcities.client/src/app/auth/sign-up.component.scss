@@ -1,4 +1,11 @@
 mat-form-field {
   display: block;
-  margin: 10px 0;
+  width: 100%;
+  margin-bottom: 32px; // Ensures space between fields
+}
+mat-error {
+  display: block;
+  margin-top: 4px;
+  white-space: normal;
+  line-height: 1.3;
 }

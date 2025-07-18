@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormGroup, FormControl, Validators, AbstractControl, AsyncValidatorFn } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
 import { AuthService } from './auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -25,9 +25,37 @@ export class SignUpComponent extends BaseFormComponent implements OnInit  {
   ngOnInit() {
     this.form = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', Validators.required),
-      password2: new FormControl('', Validators.required)
+      password: new FormControl('', [Validators.required, this.validatePasswordStrength]),
+      password2: new FormControl('', [Validators.required, this.validateSamePassword])
     });
+  }
+  private validateSamePassword(control: AbstractControl): ValidationErrors | null {
+    const password = control.parent?.get('password');
+    const confirmPassword = control.parent?.get('password2');
+    return password?.value == confirmPassword?.value ? null : { 'notSame': true };
+  }
+  private validatePasswordStrength(control: AbstractControl): ValidationErrors | null {
+    const password = control.parent?.get('password');
+
+    const errors: ValidationErrors = {};
+
+    if (password?.value.length < 8) {
+      errors['minLength'] = true;
+    }
+    if (!/[A-Z]/.test(password?.value)) {
+      errors['uppercase'] = true;
+    }
+    if (!/[a-z]/.test(password?.value)) {
+      errors['lowercase'] = true;
+    }
+    if (!/[0-9]/.test(password?.value)) {
+      errors['digit'] = true;
+    }
+    if (!/[^a-zA-Z0-9]/.test(password?.value)) {
+      errors['specialChar'] = true;
+    }
+    return Object.keys(errors).length ? errors : null;
+
   }
 
   onSubmit() {
